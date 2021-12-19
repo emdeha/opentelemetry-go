@@ -15,12 +15,19 @@
 package attribute_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 
 	"go.opentelemetry.io/otel/attribute"
 )
+
+type IntStringer int
+
+func (i IntStringer) String() string {
+	return fmt.Sprintf("%d", i)
+}
 
 func TestKeyValueConstructors(t *testing.T) {
 	tt := []struct {
@@ -37,11 +44,27 @@ func TestKeyValueConstructors(t *testing.T) {
 			},
 		},
 		{
+			name:   "BoolSlice",
+			actual: attribute.BoolSlice("k1", []bool{true, false}),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.BoolSliceValue([]bool{true, false}),
+			},
+		},
+		{
 			name:   "Int64",
 			actual: attribute.Int64("k1", 123),
 			expected: attribute.KeyValue{
 				Key:   "k1",
 				Value: attribute.Int64Value(123),
+			},
+		},
+		{
+			name:   "Int64Slice",
+			actual: attribute.Int64Slice("k1", []int64{1, 2, 3}),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.Int64SliceValue([]int64{1, 2, 3}),
 			},
 		},
 		{
@@ -53,6 +76,14 @@ func TestKeyValueConstructors(t *testing.T) {
 			},
 		},
 		{
+			name:   "Float64Slice",
+			actual: attribute.Float64Slice("k1", []float64{1.1, 2.2}),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.Float64SliceValue([]float64{1.1, 2.2}),
+			},
+		},
+		{
 			name:   "String",
 			actual: attribute.String("k1", "123.5"),
 			expected: attribute.KeyValue{
@@ -61,11 +92,35 @@ func TestKeyValueConstructors(t *testing.T) {
 			},
 		},
 		{
+			name:   "StringSlice",
+			actual: attribute.StringSlice("k1", []string{"a", "b"}),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.StringSliceValue([]string{"a", "b"}),
+			},
+		},
+		{
 			name:   "Int",
 			actual: attribute.Int("k1", 123),
 			expected: attribute.KeyValue{
 				Key:   "k1",
 				Value: attribute.IntValue(123),
+			},
+		},
+		{
+			name:   "IntSlice",
+			actual: attribute.IntSlice("k1", []int{1, 2, 3}),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.IntSliceValue([]int{1, 2, 3}),
+			},
+		},
+		{
+			name:   "Stringer",
+			actual: attribute.Stringer("k1", IntStringer(123)),
+			expected: attribute.KeyValue{
+				Key:   "k1",
+				Value: attribute.StringValue("123"),
 			},
 		},
 	}
