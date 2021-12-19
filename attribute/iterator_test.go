@@ -55,6 +55,21 @@ func TestEmptyIterator(t *testing.T) {
 	require.False(t, iter.Next())
 }
 
+func TestToSlice(t *testing.T) {
+	lbl := attribute.NewSet()
+	iter := lbl.Iter()
+	require.Nil(t, iter.ToSlice())
+
+	one := attribute.String("one", "1")
+	two := attribute.Int("two", 2)
+	lbl = attribute.NewSet(one, two)
+	iter = lbl.Iter()
+	require.Equal(t, []attribute.KeyValue{
+		attribute.String("one", "1"),
+		attribute.Int("two", 2),
+	}, iter.ToSlice())
+}
+
 func TestMergedIterator(t *testing.T) {
 
 	type inputs struct {
